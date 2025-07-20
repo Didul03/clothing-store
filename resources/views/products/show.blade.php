@@ -56,51 +56,67 @@
 
             
                 <form>
-                  <!-- Colors -->
-                  <fieldset aria-label="Choose a color">
-                    <legend class="text-sm font-medium text-gray-900">Color</legend>
+                  <!-- Size -->
+@php
+    $sizes = explode(',', $product->available_sizes);
+    $colors = explode(',', $product->available_colors);
+@endphp
 
-                    <div class="mt-4 flex items-center gap-x-3">
-                      <div class="flex rounded-full outline -outline-offset-1 outline-black/10">
-                        <input aria-label="White" type="radio" name="color" value="white" checked class="size-8 appearance-none rounded-full bg-white forced-color-adjust-none checked:outline-2 checked:outline-offset-2 checked:outline-gray-400 focus-visible:outline-3 focus-visible:outline-offset-3" />
-                      </div>
-                      <div class="flex rounded-full outline -outline-offset-1 outline-black/10">
-                        <input aria-label="Gray" type="radio" name="color" value="gray" class="size-8 appearance-none rounded-full bg-gray-200 forced-color-adjust-none checked:outline-2 checked:outline-offset-2 checked:outline-gray-400 focus-visible:outline-3 focus-visible:outline-offset-3" />
-                      </div>
-                      <div class="flex rounded-full outline -outline-offset-1 outline-black/10">
-                        <input aria-label="Black" type="radio" name="color" value="black" class="size-8 appearance-none rounded-full bg-gray-900 forced-color-adjust-none checked:outline-2 checked:outline-offset-2 checked:outline-gray-900 focus-visible:outline-3 focus-visible:outline-offset-3" />
-                      </div>
-                    </div>
-                  </fieldset>
+<!-- Size Section -->
+<div class="mb-6">
+    <div class="flex items-center justify-between mb-2">
+        <label class="text-sm font-medium text-gray-700">Size</label>
+        <a href="#" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">Size guide</a>
+    </div>
 
-                  <!-- Sizes -->
-                  <fieldset class="mt-10" aria-label="Choose a size">
-                    <div class="flex items-center justify-between">
+    <div class="mt-2 grid grid-cols-4 gap-3">
+        @foreach($sizes as $size)
+        <label class="relative cursor-pointer">
+            <input type="radio" name="size" value="{{ trim($size) }}" class="peer hidden" required>
+            <div class="flex items-center justify-center rounded-md border border-gray-300 bg-white p-3 text-sm font-medium uppercase
+                        peer-checked:border-blue-600 peer-checked:bg-blue-600 peer-checked:text-white
+                        hover:border-blue-400 transition-colors duration-200">
+                {{ trim($size) }}
+            </div>
+        </label>
+        @endforeach
+    </div>
+</div>
 
-                        <div class="mb-6">
-                            <div class="flex items-center justify-between mb-2">
-                                <label class="text-sm font-medium text-gray-700">Size</label>
-                                <a href="#" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">Size guide</a>
-                            </div>
+<!-- Color Section -->
+<div class="mb-6">
+    <label class="block text-sm font-medium text-gray-700 mb-2">Color</label>
+    <div class="flex flex-wrap gap-4">
+        @foreach($colors as $color)
+            @php
+                $colorClassMap = [
+                    'Red' => 'bg-red-500',
+                'Blue' => 'bg-blue-500',
+                'Green' => 'bg-green-500',
+                'Black' => 'bg-black',
+                'White' => 'bg-white border border-gray-300',
+                'Purple' => 'bg-purple-500',
+                'Pink' => 'bg-pink-400',
+                'Yellow' => 'bg-yellow-400',
+                ];
+                $class = $colorClassMap[trim($color)] ?? 'bg-gray-300';
+            @endphp
 
-                            <div class="mt-2 grid grid-cols-4 gap-3">
-                                @php
-                                    $sizes = ['S' => 'Small', 'M' => 'Medium', 'L' => 'Large', 'XL' => 'Extra Large'];
-                                @endphp
+            <label class="relative cursor-pointer">
+                <input type="radio" name="color" value="{{ trim($color) }}" class="peer hidden" required>
+                <div class="w-10 h-10 rounded-full {{ $class }}
+                            peer-checked:ring-2 peer-checked:ring-blue-500 peer-checked:ring-offset-2
+                            border border-gray-300 hover:scale-105 transition-transform duration-150 flex items-center justify-center">
+                    <svg class="hidden peer-checked:block w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                </div>
+            </label>
+        @endforeach
+    </div>
+</div>
 
-                                @foreach($sizes as $key => $label)
-                                <label class="relative cursor-pointer">
-                                    <input type="radio" name="size" value="{{ $key }}" class="peer hidden" required>
-                                    <div class="flex items-center justify-center rounded-md border border-gray-300 bg-white p-3 text-sm font-medium uppercase
-                                                peer-checked:border-blue-600 peer-checked:bg-blue-600 peer-checked:text-white
-                                                hover:border-blue-400 transition-colors duration-200">
-                                        {{ $key }}
-                                    </div>
-                                </label>
-                                @endforeach
-                            </div>
-                        </div>
-                  </fieldset>
 
                   @if(Auth::check())
                   <a href="{{ route('orders.create', ['product_id' => $product->id]) }}"
