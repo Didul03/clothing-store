@@ -52,6 +52,62 @@
         </div>
         </div>
 
+
+<div class="col-span-full">
+
+    <!-- Available Colors -->
+    <div class="mb-6">
+        <label class="block text-sm font-medium text-gray-700 mb-2">Available Colors :</label>
+        <div class="grid grid-cols-5 gap-3">
+            @php
+                $colors = [
+                    'Red' => 'bg-red-500',
+                    'Blue' => 'bg-blue-500',
+                    'Green' => 'bg-green-500',
+                    'Black' => 'bg-black',
+                    'White' => 'bg-white border border-gray-300',
+                    'Purple' => 'bg-purple-500',
+                    'Pink' => 'bg-pink-400',
+                    'Yellow' => 'bg-yellow-400',
+                ];
+            @endphp
+
+            @foreach($colors as $name => $class)
+                <label class="cursor-pointer">
+                    <input type="checkbox" name="available_colors[]" value="{{ $name }}" class="sr-only peer">
+                    <div class="w-8 h-8 rounded-full {{ $class }}
+                                peer-checked:ring-2 peer-checked:ring-indigo-500 peer-checked:ring-offset-2
+                                transition transform hover:scale-110 duration-200">
+                    </div>
+                </label>
+            @endforeach
+        </div>
+    </div>
+
+    <!-- Available Sizes -->
+    <div class="mb-6">
+        <label class="block text-sm font-medium text-gray-700 mb-2">Available Sizes :</label>
+        <div class="grid grid-cols-3 gap-3">
+            @php
+                $sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+            @endphp
+
+            @foreach($sizes as $size)
+                <label class="cursor-pointer">
+                    <input type="checkbox" name="available_sizes[]" value="{{ $size }}" class="sr-only peer">
+                    <div class="px-3 py-1 text-sm font-medium rounded-md border border-gray-300
+                                peer-checked:bg-indigo-600 peer-checked:text-white
+                                hover:border-indigo-400 transition duration-200 text-center">
+                        {{ $size }}
+                    </div>
+                </label>
+            @endforeach
+        </div>
+    </div>
+</div>
+
+
+
          <div class="col-span-full">
           <label for="cover-photo" class="block text-sm/6 font-medium text-gray-900">Image:</label>
           <div class="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
