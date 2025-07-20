@@ -30,6 +30,8 @@ class ProductController extends Controller
         'name' => 'required',
         'description' => 'required',
         'price' => 'required|numeric',
+        'available_colors' => 'nullable|array',
+        'available_sizes' => 'nullable|array',
         'image' => 'required|image|mimes:jpg,png,jpeg|max:2048',
     ]);
 
@@ -39,16 +41,22 @@ class ProductController extends Controller
         $request->image->move(public_path('images'), $imageName);
     }
 
-    // Create product
-    Product::create([
-        'name' => $request->name,
-        'description' => $request->description,
-        'price' => $request->price,
-        'image' => $imageName ?? null, // store only the file name
-    ]);
+    // Save product
+    $product = new Product();
+    $product->name = $request->name;
+    $product->description = $request->description;
+    $product->price = $request->price;
+    $product->image = $imageName ?? null;
+
+    // Store color/size arrays as comma-separated strings
+    $product->available_colors = is_array($request->available_colors) ? implode(',', $request->available_colors) : null;
+    $product->available_sizes = is_array($request->available_sizes) ? implode(',', $request->available_sizes) : null;
+
+    $product->save();
 
     return redirect()->route('products.index')->with('success', 'Product added successfully!');
 }
+
 
 public function edit($id)
 {
